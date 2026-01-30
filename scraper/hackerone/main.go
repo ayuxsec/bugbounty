@@ -53,7 +53,6 @@ func main() {
 			),
 		)
 		req.SetBasicAuth(strings.Split(*apiCreds, ":")[0], strings.Split(*apiCreds, ":")[1])
-
 		resp, err := client.Do(req)
 		if err != nil {
 			log.Fatalf("client.Do error: +%v", err)
@@ -68,6 +67,9 @@ func main() {
 			log.Print(string(data))
 		}
 		log.Print("[+] success scraping program: ", pHandle)
+	}
+	if scanner.Err() != nil {
+		log.Fatal(scanner.Err().Error())
 	}
 }
 
