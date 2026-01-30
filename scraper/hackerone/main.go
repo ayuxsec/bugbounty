@@ -62,10 +62,21 @@ func main() {
 		data := Must(io.ReadAll(resp.Body))
 
 		if *outputPath != "" {
-			os.WriteFile(*outputPath, data, 0644)
+			f := Must(os.OpenFile(
+				*outputPath,
+				os.O_CREATE|os.O_WRONLY|os.O_APPEND,
+				0644,
+			))
+			defer f.Close()
+
+			_, err := f.Write(append(data, '\n')) // newline for jsonl
+			if err != nil {
+				log.Fatalf("write error: %v", err)
+			}
 		} else {
 			log.Print(string(data))
 		}
+
 		log.Print("[+] success scraping program: ", pHandle)
 	}
 	if scanner.Err() != nil {
